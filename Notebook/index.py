@@ -18,7 +18,7 @@ def toEvent(events):
             "event": i.event,
             "status": i.status
         })
-    return jsonify(j)
+    return j
 
 
 @index.route('/test', methods=['GET'])
@@ -138,7 +138,11 @@ def query_all():
             "event": i.event,
             "status": i.status
         })
-    return jsonify(j)
+    return {
+        "status": 0,
+        "message": "success",
+        "data": j
+    }
 
 
 # 查看所有待办事项
@@ -154,7 +158,11 @@ def query_incomplete():
             "event": i.event,
             "status": i.status
         })
-    return jsonify(j)
+    return {
+        "status": 0,
+        "message": "success",
+        "data": j
+    }
 
 
 # 查看所有已完成事项
@@ -170,7 +178,11 @@ def query_done():
             "event": i.event,
             "status": i.status
         })
-    return jsonify(j)
+    return {
+        "status": 0,
+        "message": "success",
+        "data": j
+    }
 
 
 # 获取所有事项的数量
@@ -211,10 +223,14 @@ def getamount_done():
 def delete_all():
     events = Events.query.all()
     if events != Null:
-        events = toEvent(events)
+        events = list(toEvent(events))
         Events.query.delete()
         db.session.commit()
-        return events
+        return {
+            "status": 0,
+            "message": "success",
+            "data": events
+        }
     return {
         "status": 1,
         "message": "error",
@@ -227,10 +243,14 @@ def delete_all():
 def delete_incomplete():
     events = Events.query.filter_by(status=False).all()
     if events != Null:
-        events = toEvent(events)
+        events = list(toEvent(events))
         Events.query.filter_by(status=False).delete()
         db.session.commit()
-        return events
+        return {
+            "status": 0,
+            "message": "success",
+            "data": events
+        }
     return {
         "status": 1,
         "message": "error",
@@ -246,7 +266,11 @@ def delete_done():
         events = toEvent(events)
         Events.query.filter_by(status=True).delete()
         db.session.commit()
-        return events
+        return {
+            "status": 0,
+            "message": "success",
+            "data": events
+        }
     return {
         "status": 1,
         "message": "error",
@@ -263,7 +287,11 @@ def delete_one():
         events = toEvent(events)
         Events.query.filter_by(eid=eid).delete()
         db.session.commit()
-        return events
+        return {
+            "status": 1,
+            "message": "delete success",
+            "data": events
+        }
     return {
         "status": 1,
         "message": "error",
